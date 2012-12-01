@@ -1,0 +1,76 @@
+NAME
+    MooX::late - easily translate Moose code to Moo
+
+SYNOPSIS
+            package Foo;
+            use MooX 'late';
+            has bar => (is => 'ro', isa => 'Str');
+
+    or, without MooX:
+
+            package Foo;
+            use Moo;
+            use MooX::late;
+            has bar => (is => 'ro', isa => 'Str');
+
+DESCRIPTION
+    Moo is a light-weight object oriented programming framework which aims
+    to be compatible with Moose. It does this by detecting when Moose has
+    been loaded, and automatically "inflating" its classes and roles to full
+    Moose classes and roles. This way, Moo classes can consume Moose roles,
+    Moose classes can extend Moo classes, and so forth.
+
+    However, the surface syntax of Moo differs somewhat from Moose. For
+    example the "isa" option when defining attributes in Moose must be
+    either a string or a blessed Moose::Meta::TypeConstraint object; but in
+    Moo must be a coderef. These differences in surface syntax make porting
+    code from Moose to Moo potentially tricky. MooX::late provides some
+    assistance by enabling a slightly more Moosey surface syntax.
+
+    MooX::late does the following:
+
+    1.  Allows "isa => $string" to work when defining attributes for all
+        Moose's built-in type constraints (and assumes other strings are
+        package names).
+
+    2.  Allows "default => $non_reference_value" to work when defining
+        attributes.
+
+    3.  Allows "lazy_build => 1" to work when defining attributes.
+
+    4.  Exports "blessed" and "confess" functions to your namespace.
+
+    Four features. It is not the aim of "MooX::late" to make every aspect of
+    Moo behave exactly identically to Moose. It's just going after the
+    low-hanging fruit. So it does four things right now, and I promise that
+    future versions will never do more than seven.
+
+BUGS
+    Please report any bugs to
+    <http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>.
+
+SEE ALSO
+    The following modules bring additional Moose functionality to Moo:
+
+    *   MooX::Override - support override/super
+
+    *   MooX::Augment - support augment/inner
+
+    If you have MooX then you can import them all at once using:
+
+            use MooX qw( late Override Augment );
+
+AUTHOR
+    Toby Inkster <tobyink@cpan.org>.
+
+COPYRIGHT AND LICENCE
+    This software is copyright (c) 2012 by Toby Inkster.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
+DISCLAIMER OF WARRANTIES
+    THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED
+    WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+    MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
