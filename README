@@ -33,6 +33,10 @@ DESCRIPTION
         Moose's built-in type constraints (and assumes other strings are
         package names).
 
+        This feature require MooX::Types::MooseLike::Base. If you don't have
+        it, you'll get a warning message and all your "isa" checks will be
+        no-ops.
+
     2.  Allows "default => $non_reference_value" to work when defining
         attributes.
 
@@ -50,6 +54,10 @@ BUGS
     <http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>.
 
 SEE ALSO
+    "MooX::late" uses MooX::Types::MooseLike::Base to check many type
+    constraints. This is an optional dependency, but without it most type
+    constraints are ignored.
+
     The following modules bring additional Moose functionality to Moo:
 
     *   MooX::Override - support override/super

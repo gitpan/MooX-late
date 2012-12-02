@@ -6,6 +6,12 @@ Home page:    <https://metacpan.org/release/MooX-late>
 Bug tracker:  <http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>
 Maintainer:   Toby Inkster <mailto:tobyink@cpan.org>
 
+0.003  2012-12-02
+
+ - (Addition) Inflation of type constraints to Moose.
+ - General refactoring of type constraint code.
+ - Use MooX::Types::MooseLike::Base for type checks.
+
 0.002  2012-12-02
 
  - (Bugfix) use re 'eval' on Perl 5.8 to fix regexp compilation problem

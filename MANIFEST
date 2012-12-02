@@ -32,4 +32,5 @@ meta/makefile.pret
 meta/people.pret
 README
 t/01basic.t
+t/02inflation.t
 SIGNATURE                                Public-key signature (added by MakeMaker)
