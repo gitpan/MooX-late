@@ -13,6 +13,8 @@ SYNOPSIS
             use MooX::late;
             has bar => (is => 'ro', isa => 'Str');
 
+    (Examples for Moo roles in section below.)
+
 DESCRIPTION
     Moo is a light-weight object oriented programming framework which aims
     to be compatible with Moose. It does this by detecting when Moose has
@@ -49,6 +51,26 @@ DESCRIPTION
     low-hanging fruit. So it does four things right now, and I promise that
     future versions will never do more than seven.
 
+  Use in Moo::Roles
+    MooX::late should work in Moo::Roles, with no particular caveats.
+
+            package MyRole;
+            use MooX::Role 'late';
+
+    or, without MooX:
+
+            package MyRole;
+            use Moo::Role;
+            use MooX::late;
+
+    Package::Variant can be used to build the Moo equivalent of
+    parameterized roles. MooX::late should work in roles built with
+    Package::Variant.
+
+            use Package::Variant
+                    importing => ['MooX::Role' => ['late']],
+                    subs      => [ qw(has with) ];
+
 BUGS
     Please report any bugs to
     <http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>.
@@ -67,6 +89,10 @@ SEE ALSO
     If you have MooX then you can import them all at once using:
 
             use MooX qw( late Override Augment );
+
+    MooX::HandlesVia <https://github.com/mattp-/MooX-HandlesVia> is also in
+    development, and once released MooX::late may be able to use it to add a
+    native-traits-like feature.
 
 AUTHOR
     Toby Inkster <tobyink@cpan.org>.

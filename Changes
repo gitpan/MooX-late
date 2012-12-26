@@ -6,6 +6,12 @@ Home page:    <https://metacpan.org/release/MooX-late>
 Bug tracker:  <http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>
 Maintainer:   Toby Inkster <mailto:tobyink@cpan.org>
 
+0.007  2012-12-26
+
+ - (Documentation) Documentation for use with Moo::Role.
+   ++$SHLOMIF
+ - (Documentation) Link to MooX::HandlesVia on github.
+
 0.006  2012-12-11
 
  - (Bugfix) Skip t/02inflation.t if no MooX::Types::MooseLike::Base.

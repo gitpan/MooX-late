@@ -4,7 +4,7 @@ use warnings;
 
 package MooX::late;
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.006';
+our $VERSION   = '0.007';
 
 use Moo              qw( );
 use Carp             qw( carp croak );
@@ -14,7 +14,7 @@ use Module::Runtime  qw( is_module_name );
 BEGIN {
 	package MooX::late::DefinitionContext;
 	our $AUTHORITY = 'cpan:TOBYINK';
-	our $VERSION   = '0.006';
+	our $VERSION   = '0.007';
 	
 	use Moo;
 	use overload (
@@ -394,6 +394,8 @@ or, without L<MooX>:
 	use MooX::late;
 	has bar => (is => 'ro', isa => 'Str');
 
+(Examples for Moo roles in section below.)
+
 =head1 DESCRIPTION
 
 L<Moo> is a light-weight object oriented programming framework which aims
@@ -443,6 +445,27 @@ Moo behave exactly identically to Moose. It's just going after the low-hanging
 fruit. So it does four things right now, and I promise that future versions
 will never do more than seven.
 
+=head2 Use in Moo::Roles
+
+MooX::late should work in Moo::Roles, with no particular caveats.
+
+	package MyRole;
+	use MooX::Role 'late';
+
+or, without L<MooX>:
+
+	package MyRole;
+	use Moo::Role;
+	use MooX::late;
+
+L<Package::Variant> can be used to build the Moo equivalent of
+parameterized roles. MooX::late should work in roles built with
+Package::Variant.
+
+	use Package::Variant
+		importing => ['MooX::Role' => ['late']],
+		subs      => [ qw(has with) ];
+
 =head1 BUGS
 
 Please report any bugs to
@@ -471,6 +494,10 @@ L<MooX::Augment> - support augment/inner
 If you have L<MooX> then you can import them all at once using:
 
 	use MooX qw( late Override Augment );
+
+L<MooX::HandlesVia|https://github.com/mattp-/MooX-HandlesVia> is also in
+development, and once released MooX::late may be able to use it to add
+a native-traits-like feature.
 
 =head1 AUTHOR
 
