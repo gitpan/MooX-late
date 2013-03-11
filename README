@@ -2,16 +2,10 @@ NAME
     MooX::late - easily translate Moose code to Moo
 
 SYNOPSIS
-            package Foo;
-            use MooX 'late';
-            has bar => (is => 'ro', isa => 'Str');
-
-    or, without MooX:
-
-            package Foo;
-            use Moo;
-            use MooX::late;
-            has bar => (is => 'ro', isa => 'Str');
+       package Foo;
+       use Moo;
+       use MooX::late;
+       has bar => (is => "ro", isa => "Str", default => "MacLaren's Pub");
 
     (Examples for Moo roles in section below.)
 
@@ -54,22 +48,17 @@ DESCRIPTION
   Use in Moo::Roles
     MooX::late should work in Moo::Roles, with no particular caveats.
 
-            package MyRole;
-            use MooX::Role 'late';
-
-    or, without MooX:
-
-            package MyRole;
-            use Moo::Role;
-            use MooX::late;
+       package MyRole;
+       use Moo::Role;
+       use MooX::late;
 
     Package::Variant can be used to build the Moo equivalent of
     parameterized roles. MooX::late should work in roles built with
     Package::Variant.
 
-            use Package::Variant
-                    importing => ['MooX::Role' => ['late']],
-                    subs      => [ qw(has with) ];
+       use Package::Variant
+          importing => ['MooX::Role' => ['late']],
+          subs      => [ qw(has with) ];
 
 BUGS
     Please report any bugs to
@@ -77,8 +66,7 @@ BUGS
 
 SEE ALSO
     "MooX::late" uses MooX::Types::MooseLike::Base to check many type
-    constraints. This is an optional dependency, but without it most type
-    constraints are ignored.
+    constraints.
 
     The following modules bring additional Moose functionality to Moo:
 
@@ -86,19 +74,18 @@ SEE ALSO
 
     *   MooX::Augment - support augment/inner
 
-    If you have MooX then you can import them all at once using:
-
-            use MooX qw( late Override Augment );
-
     MooX::HandlesVia <https://github.com/mattp-/MooX-HandlesVia> is also in
     development, and once released MooX::late may be able to use it to add a
     native-traits-like feature.
+
+    MooX allows you to load Moo plus multiple MooX extension modules in a
+    single line.
 
 AUTHOR
     Toby Inkster <tobyink@cpan.org>.
 
 COPYRIGHT AND LICENCE
-    This software is copyright (c) 2012 by Toby Inkster.
+    This software is copyright (c) 2012-2013 by Toby Inkster.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
