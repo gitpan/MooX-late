@@ -29,9 +29,7 @@ DESCRIPTION
         Moose's built-in type constraints (and assumes other strings are
         package names).
 
-        This feature require MooX::Types::MooseLike::Base. If you don't have
-        it, you'll get a warning message and all your "isa" checks will be
-        no-ops.
+        This feature requires Types::Standard.
 
     2.  Allows "default => $non_reference_value" to work when defining
         attributes.
@@ -65,8 +63,7 @@ BUGS
     <http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>.
 
 SEE ALSO
-    "MooX::late" uses MooX::Types::MooseLike::Base to check many type
-    constraints.
+    "MooX::late" uses Types::Standard to check type constraints.
 
     The following modules bring additional Moose functionality to Moo:
 
@@ -74,9 +71,8 @@ SEE ALSO
 
     *   MooX::Augment - support augment/inner
 
-    MooX::HandlesVia <https://github.com/mattp-/MooX-HandlesVia> is also in
-    development, and once released MooX::late may be able to use it to add a
-    native-traits-like feature.
+    MooX::HandlesVia provides a native-traits-like feature for Moo. There
+    are plans afoot to add MooX::HandlesVia magic to MooX::late.
 
     MooX allows you to load Moo plus multiple MooX extension modules in a
     single line.
