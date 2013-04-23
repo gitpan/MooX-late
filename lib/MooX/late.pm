@@ -4,7 +4,7 @@ use warnings;
 
 package MooX::late;
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.009';
+our $VERSION   = '0.010';
 
 use Moo              qw( );
 use Carp             qw( carp croak );
@@ -14,7 +14,7 @@ use Module::Runtime  qw( is_module_name );
 BEGIN {
 	package MooX::late::DefinitionContext;
 	our $AUTHORITY = 'cpan:TOBYINK';
-	our $VERSION   = '0.009';
+	our $VERSION   = '0.010';
 	
 	use Moo;
 	use overload (
@@ -226,7 +226,7 @@ sub _process_lazy_build
 		if ($tc =~ /^(
 			Any|Item|Bool|Undef|Defined|Value|Str|Num|Int|
 			Ref|CodeRef|RegexpRef|GlobRef|FileHandle|Object|
-			ScalarRef|ArrayRef|HashRef|ClassName|RoleName
+			ScalarRef|ArrayRef|HashRef|ClassName|RoleName|Maybe
 		)$/x)
 		{
 			require Types::Standard;
