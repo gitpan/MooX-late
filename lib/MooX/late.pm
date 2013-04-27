@@ -4,7 +4,7 @@ use warnings;
 
 package MooX::late;
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.010';
+our $VERSION   = '0.011';
 
 use Moo              qw( );
 use Carp             qw( carp croak );
@@ -14,7 +14,7 @@ use Module::Runtime  qw( is_module_name );
 BEGIN {
 	package MooX::late::DefinitionContext;
 	our $AUTHORITY = 'cpan:TOBYINK';
-	our $VERSION   = '0.010';
+	our $VERSION   = '0.011';
 	
 	use Moo;
 	use overload (
@@ -249,13 +249,13 @@ sub _process_lazy_build
 		elsif (is_module_name($tc))
 		{
 			require Type::Utils;
-			Type::Utils::class_type({ class => $tc });
+			return Type::Utils::class_type({ class => $tc });
 		}
 		
 		require Type::Utils;
 		require Types::Standard;
 		my $warned = 0;
-		Type::Utils::declare(
+		return Type::Utils::declare(
 			Type::Utils::as( Types::Standard::Any() ),
 			Type::Utils::where(sub {
 				$warned ||=1+!! carp("Type constraint '$tc' not fully enforced (defined at $ctx)");

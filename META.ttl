@@ -57,6 +57,7 @@ dist:project
 	doap:release      dist:v_0-008;
 	doap:release      dist:v_0-009;
 	doap:release      dist:v_0-010;
+	doap:release      dist:v_0-011;
 	doap:repository   [
 		a doap:HgRepository;
 		doap:browse <https://bitbucket.org/tobyink/p5-moox-late>;
@@ -228,6 +229,26 @@ dist:v_0-010
 	dcs:released-by   cpan:tobyink;
 	doap:file-release <http://backpan.cpan.org/authors/id/T/TO/TOBYINK/MooX-late-0.010.tar.gz>;
 	doap:revision     "0.010"^^xsd:string.
+
+dist:v_0-011
+	a                 doap:Version;
+	dc:identifier     "MooX-late-0.011"^^xsd:string;
+	dc:issued         "2013-04-27"^^xsd:date;
+	dcs:changeset     [
+		dcs:item [
+			a dcs:Bugfix;
+			rdfs:label "Fix support for class types.";
+			dcs:fixes [
+				dbug:affects dist:v_0-009;
+				dbug:affects dist:v_0-010;
+				dbug:reporter cpan:shlomif;
+			];
+			dcs:thanks cpan:shlomif;
+		];
+	];
+	dcs:released-by   cpan:tobyink;
+	doap:file-release <http://backpan.cpan.org/authors/id/T/TO/TOBYINK/MooX-late-0.011.tar.gz>;
+	doap:revision     "0.011"^^xsd:string.
 
 cpan:shlomif
 	a                 foaf:Person;
