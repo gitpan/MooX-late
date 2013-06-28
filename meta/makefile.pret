@@ -5,8 +5,8 @@
 	version_from      m`MooX::late`;
 	readme_from       m`MooX::late`;
 	test_requires     p`Test::More 0.61`;
-	requires          p`Moo 1.000004`;
-	requires          p`Type::Tiny 0.000_08`;
+	requires          p`Moo 1.002000`;
+	requires          p`Type::Registry 0.014`;
 	recommends        p`MooX`;
 .
 

@@ -28,8 +28,8 @@ dist:project
 		nfo:programmingLanguage "Perl";
 	];
 	cpant:recommends  "MooX"^^cpant:dsWithoutVersion;
-	cpant:requires    "Moo 1.000004"^^cpant:dsWithVersion;
-	cpant:requires    "Type::Tiny 0.000_08"^^cpant:dsWithVersion;
+	cpant:requires    "Moo 1.002000"^^cpant:dsWithVersion;
+	cpant:requires    "Type::Registry 0.014"^^cpant:dsWithVersion;
 	cpant:test_requires "Test::More 0.61"^^cpant:dsWithVersion;
 	cpant:version_from [
 		a nfo:FileDataObject;
@@ -58,9 +58,10 @@ dist:project
 	doap:release      dist:v_0-009;
 	doap:release      dist:v_0-010;
 	doap:release      dist:v_0-011;
+	doap:release      dist:v_0-012;
 	doap:repository   [
-		a doap:HgRepository;
-		doap:browse <https://bitbucket.org/tobyink/p5-moox-late>;
+		a doap:GitRepository;
+		doap:browse <https://github.com/tobyink/p5-moox-late>;
 	];
 	doap:shortdesc    "easily translate Moose code to Moo".
 
@@ -249,6 +250,20 @@ dist:v_0-011
 	dcs:released-by   cpan:tobyink;
 	doap:file-release <http://backpan.cpan.org/authors/id/T/TO/TOBYINK/MooX-late-0.011.tar.gz>;
 	doap:revision     "0.011"^^xsd:string.
+
+dist:v_0-012
+	a                 doap:Version;
+	dc:identifier     "MooX-late-0.012"^^xsd:string;
+	dc:issued         "2013-06-28"^^xsd:date;
+	dcs:changeset     [
+		dcs:item [
+			a dcs:Update;
+			rdfs:label "Use Type::Registry/Type::Parser to translate strings to type constraint expressions.";
+		];
+	];
+	dcs:released-by   cpan:tobyink;
+	doap:file-release <http://backpan.cpan.org/authors/id/T/TO/TOBYINK/MooX-late-0.012.tar.gz>;
+	doap:revision     "0.012"^^xsd:string.
 
 cpan:shlomif
 	a                 foaf:Person;

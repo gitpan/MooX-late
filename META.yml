@@ -26,12 +26,12 @@ no_index:
 recommends:
   MooX: 0
 requires:
-  Moo: 1.000004
-  Type::Tiny: 0.000_08
+  Moo: 1.002000
+  Type::Registry: 0.014
   perl: 5.8.0
 resources:
   bugtracker: http://rt.cpan.org/Dist/Display.html?Queue=MooX-late
   homepage: https://metacpan.org/release/MooX-late
   license: http://dev.perl.org/licenses/
-  repository: https://bitbucket.org/tobyink/p5-moox-late
-version: 0.011
+  repository: https://github.com/tobyink/p5-moox-late
+version: 0.012

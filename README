@@ -58,6 +58,15 @@ DESCRIPTION
           importing => ['MooX::Role' => ['late']],
           subs      => [ qw(has with) ];
 
+  Type constraints
+    Type constraint strings are interpreted using Type::Parser, using the
+    type constraints defined in Types::Standard. This provides a very slight
+    superset of Moose's type constraint syntax and built-in type
+    constraints.
+
+    Any unrecognized string that looks like it might be a class name is
+    interpreted as a class type constraint.
+
 BUGS
     Please report any bugs to
     <http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>.
