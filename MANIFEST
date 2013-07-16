@@ -37,4 +37,5 @@ t/03invalid_tc.t
 t/04arrayofattrs.t
 t/05haveimissedanytypes.t
 t/06handlesvia.t
+t/07coerce1.t
 SIGNATURE                                Public-key signature (added by MakeMaker)

@@ -4,6 +4,7 @@ author:
   - 'Toby Inkster <tobyink@cpan.org>'
 build_requires:
   ExtUtils::MakeMaker: 6.59
+  Test::Fatal: 0.010
   Test::More: 0.96
   Test::Requires: 0.06
 configure_requires:
@@ -36,4 +37,4 @@ resources:
   homepage: https://metacpan.org/release/MooX-late
   license: http://dev.perl.org/licenses/
   repository: https://github.com/tobyink/p5-moox-late
-version: 0.013
+version: 0.014

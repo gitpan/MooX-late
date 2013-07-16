@@ -35,6 +35,7 @@ License: GPL-1.0+ or Artistic-1.0
 
 Files: t/05haveimissedanytypes.t
  t/06handlesvia.t
+ t/07coerce1.t
 Copyright: This software is copyright (c) 2013 by Toby Inkster.
 License: GPL-1.0+ or Artistic-1.0
 
@@ -47,10 +48,6 @@ Files: inc/YAML/Tiny.pm
 Copyright: Copyright 2006 - 2012 Adam Kennedy.
 License: GPL-1.0+ or Artistic-1.0
 
-Files: inc/Module/Install/Makefile.pm
-Copyright: Copyright 2002, 2003, 2004 Audrey Tang and Brian Ingerson.
-License: GPL-1.0+ or Artistic-1.0
-
 Files: inc/Module/Install/Base.pm
 Copyright: Copyright 2003, 2004 by Audrey Tang <autrijus@autrijus.org>.
 License: GPL-1.0+ or Artistic-1.0
@@ -59,6 +56,10 @@ Files: COPYRIGHT
 Copyright: None
 License: public-domain
 Comment: This file! Automatically generated.
+
+Files: inc/Module/Install/Makefile.pm
+Copyright: Copyright 2002, 2003, 2004 Audrey Tang and Brian Ingerson.
+License: GPL-1.0+ or Artistic-1.0
 
 Files: inc/Module/Install/Package.pm
 Copyright: Copyright (c) 2011. Ingy doet Net.

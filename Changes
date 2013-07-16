@@ -6,6 +6,11 @@ Home page:    <https://metacpan.org/release/MooX-late>
 Bug tracker:  <http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>
 Maintainer:   Toby Inkster <mailto:tobyink@cpan.org>
 
+0.014  2013-07-16
+
+ - (Addition) Support `coerce => 1` for Type::Tiny type constraints and
+   those providing a similar API.
+
 0.013  2013-07-16
 
  - (Addition) Support Moose attribute traits using MooX::HandlesVia.

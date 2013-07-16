@@ -48,9 +48,12 @@ DESCRIPTION
         need another attribute trait to be supported, let me know and I will
         consider it.
 
-    Four features. It is not the aim of "MooX::late" to make every aspect of
+    6.  Supports "coerce => 1" if the type constraint is a blessed object
+        implementing Type::API::Constraint::Coercible.
+
+    Five features. It is not the aim of "MooX::late" to make every aspect of
     Moo behave exactly identically to Moose. It's just going after the
-    low-hanging fruit. So it does four things right now, and I promise that
+    low-hanging fruit. So it does five things right now, and I promise that
     future versions will never do more than seven.
 
   Use in Moo::Roles
@@ -65,8 +68,8 @@ DESCRIPTION
     Package::Variant.
 
        use Package::Variant
-          importing => ['MooX::Role' => ['late']],
-          subs      => [ qw(has with) ];
+          importing => [ qw( Moo::Role MooX::late ) ],
+          subs      => [ qw( has with ) ];
 
   Type constraints
     Type constraint strings are interpreted using Type::Parser, using the
