@@ -21,7 +21,6 @@ inc/Module/Package.pm
 inc/Module/Package/Dist/RDF.pm
 inc/YAML/Tiny.pm
 lib/MooX/late.pm
-lib/MooX/late/TypeRegistry.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
@@ -37,4 +36,5 @@ t/02inflation.t
 t/03invalid_tc.t
 t/04arrayofattrs.t
 t/05haveimissedanytypes.t
+t/06handlesvia.t
 SIGNATURE                                Public-key signature (added by MakeMaker)

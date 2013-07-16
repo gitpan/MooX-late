@@ -31,12 +31,22 @@ DESCRIPTION
 
         This feature requires Types::Standard.
 
-    2.  Allows "default => $non_reference_value" to work when defining
+    2.  Retired feature: this is now built in to Moo.
+
+        Allows "default => $non_reference_value" to work when defining
         attributes.
 
     3.  Allows "lazy_build => 1" to work when defining attributes.
 
     4.  Exports "blessed" and "confess" functions to your namespace.
+
+    5.  Handles certain attribute traits. Currently "Hash", "Array" and
+        "Code" are supported. This feature requires MooX::HandlesVia.
+
+        "String", "Number", "Counter" and "Bool" are unlikely to ever be
+        supported because of internal implementation details of Moo. If you
+        need another attribute trait to be supported, let me know and I will
+        consider it.
 
     Four features. It is not the aim of "MooX::late" to make every aspect of
     Moo behave exactly identically to Moose. It's just going after the
@@ -67,6 +77,10 @@ DESCRIPTION
     Any unrecognized string that looks like it might be a class name is
     interpreted as a class type constraint.
 
+  Subclassing
+    MooX::late is designed to be reasonably easy to subclass. There are
+    comments in the source code explaining hooks for extensibility.
+
 BUGS
     Please report any bugs to
     <http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>.
@@ -74,14 +88,14 @@ BUGS
 SEE ALSO
     "MooX::late" uses Types::Standard to check type constraints.
 
+    "MooX::late" uses MooX::HandlesVia to provide native attribute traits
+    support.
+
     The following modules bring additional Moose functionality to Moo:
 
     *   MooX::Override - support override/super
 
     *   MooX::Augment - support augment/inner
-
-    MooX::HandlesVia provides a native-traits-like feature for Moo. There
-    are plans afoot to add MooX::HandlesVia magic to MooX::late.
 
     MooX allows you to load Moo plus multiple MooX extension modules in a
     single line.

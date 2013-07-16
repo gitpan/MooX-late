@@ -4,7 +4,7 @@ use warnings;
 
 package MooX::late;
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.012';
+our $VERSION   = '0.013';
 
 use Moo              qw( );
 use Carp             qw( carp croak );
@@ -14,7 +14,7 @@ use Module::Runtime  qw( is_module_name );
 BEGIN {
 	package MooX::late::DefinitionContext;
 	our $AUTHORITY = 'cpan:TOBYINK';
-	our $VERSION   = '0.012';
+	our $VERSION   = '0.013';
 	
 	use Moo;
 	use overload (
@@ -52,6 +52,27 @@ BEGIN {
 	}
 };
 
+# SUBCLASSING
+# This is a hook for people subclassing MooX::late.
+# It should be easy to tack on your own handlers
+# to the end of the list. A handler is only called
+# if exists($spec{$handler_name}) in the attribute
+# spec.
+# 
+sub _handlers
+{
+	qw( isa lazy_build traits );
+}
+
+# SUBCLASSING
+# Not really sure why you'd want to override
+# this.
+#
+sub _definition_context_class
+{
+	"MooX::late::DefinitionContext";
+}
+
 sub import
 {
 	my $me = shift;
@@ -78,58 +99,82 @@ sub import
 	my $orig = $caller->can('has')  # lolcat
 		or croak "Could not locate 'has' function to alter";
 	
+	my @handlers = $me->_handlers;
+	
+	# SUBCLASSING
+	# MooX::late itself does not provide a
+	# `_finalize_attribute` method. Your subclass
+	# can, in which case it will be called right
+	# before setting up the attribute.
+	# 
+	my $finalize = $me->can("_finalize_attribute");
+	
 	$install_tracked->(
 		$caller, has => sub
 		{
 			my ($proto, %spec) = @_;
-			my $context = "MooX::late::DefinitionContext"->new_from_caller(0);
+			my $context = $me->_definition_context_class->new_from_caller(0);
 			
 			for my $name (ref $proto ? @$proto : $proto)
 			{
 				my $spec = +{ %spec }; # shallow clone
-				$me->_process_isa($name, $spec, $context, $caller)
-					if exists $spec->{isa} && !ref $spec->{isa};
-				$me->_process_default($name, $spec, $context, $caller)
-					if exists $spec->{default} && !ref $spec->{default};
-				$me->_process_lazy_build($name, $spec, $context, $caller)
-					if exists $spec->{lazy_build} && $spec->{lazy_build};
 				
+				for my $option (@handlers)
+				{
+					next unless exists $spec->{$option};
+					my $handler = $me->can("_handle_$option");
+					
+					# SUBCLASSING
+					# Note that handlers are called as methods, and
+					# get passed:
+					# 1. the attribute name
+					# 2. the attribute spec (hashref, modifiable)
+					# 3. a context object
+					# 4. the name of the caller class/role
+					#
+					$me->$handler($name, $spec, $context, $caller);
+				}
+				
+				$me->$finalize($name, $spec, $context, $caller) if $finalize;
 				$orig->($name, %$spec);
 			}
 			return;
 		},
 	);
 	
-	$install_tracked->($caller, blessed => \&Scalar::Util::blessed);
-	$install_tracked->($caller, confess => \&Carp::confess);
+	$me->_install_sugar($caller, $install_tracked);
+}
+
+# SUBCLASSING
+# This can be used to install additional functions
+# into the caller package.
+#
+sub _install_sugar
+{
+	my $me = shift;
+	my ($caller, $installer) = @_;
+	$installer->($caller, blessed => \&Scalar::Util::blessed);
+	$installer->($caller, confess => \&Carp::confess);
 }
 
 my %registry;
-sub _process_isa
+sub _handle_isa
 {
-	my ($me, $name, $spec, $context, $class) = @_;
-	my $reg = (
-		$registry{$class} ||= do {
-			require MooX::late::TypeRegistry;
-			"MooX::late::TypeRegistry"->new(chained => $class);
-		}
-	);
-	$spec->{isa} = $reg->lookup($spec->{isa});
+	my $me = shift;
+	my ($name, $spec, $context, $class) = @_;
+	return if ref $spec->{isa};
+	
+	require Type::Utils;
+	$spec->{isa} = Type::Utils::dwim_type($spec->{isa}, for => $class);
+	
 	return;
 }
 
-sub _process_default
+sub _handle_lazy_build
 {
-	my ($me, $name, $spec, $context) = @_;
-	my $value = $spec->{default};
-	$spec->{default} = sub { $value };
-	return;
-}
-
-sub _process_lazy_build
-{
-	my ($me, $name, $spec, $context) = @_;
-	delete $spec->{lazy_build};
+	my $me = shift;
+	my ($name, $spec, $context, $class) = @_;
+	return unless delete $spec->{lazy_build};
 	
 	$spec->{is}      ||= "ro";
 	$spec->{lazy}    ||= 1;
@@ -144,6 +189,90 @@ sub _process_lazy_build
 	{
 		$spec->{clearer}   ||= "clear_$name";
 		$spec->{predicate} ||= "has_$name";
+	}
+	
+	return;
+}
+
+sub _handle_traits
+{
+	my $me = shift;
+	my ($name, $spec, $context, $class) = @_;
+	
+	my @new;
+	foreach my $trait (@{ $spec->{traits} || [] })
+	{
+		my $handler = $me->can("_handletrait_$trait");
+		croak "$me cannot process trait $trait" unless $handler;
+		
+		# SUBCLASSING
+		# There is a second level of handlers for traits.
+		# Just add a method called "_handletrait_Foo"
+		# and it will be called to handle the trait "Foo".
+		# These handlers should normally return the empty
+		# list, but may return a list of strings to add to
+		# a *new* traits arrayref.
+		#
+		push @new, $me->$handler(@_);
+	}
+	
+	$spec->{traits} = \@new;
+	
+	if ($spec->{handles_via})
+	{
+		eval "require MooX::HandlesVia"
+			or croak("Requires MooX::HandlesVia for attribute trait defined at $context");
+		
+		my ($name, %spec) = MooX::HandlesVia::process_has($name, %$spec);
+		%$spec = %spec;
+	}
+	
+	return;
+}
+
+sub _handletrait_Array
+{
+	my $me = shift;
+	my ($name, $spec, $context, $class) = @_;
+	
+	$spec->{handles_via} = "Data::Perl::Collection::Array::MooseLike";
+	
+	return;
+}
+
+sub _handletrait_Hash
+{
+	my $me = shift;
+	my ($name, $spec, $context, $class) = @_;
+	
+	$spec->{handles_via} = "Data::Perl::Collection::Hash::MooseLike";
+	
+	return;
+}
+
+sub _handletrait_Code
+{
+	my $me = shift;
+	my ($name, $spec, $context, $class) = @_;
+	
+	$spec->{handles_via} = "Data::Perl::Code";
+	
+	# Special handling for execute_method!
+	while (my ($k, $v) = each %{ $spec->{handles} })
+	{
+		next unless $v eq q(execute_method);
+		
+		# MooX::HandlesVia can't handle this right yet.
+		delete $spec->{handles}{$k};
+		
+		# ... so we handle it ourselves.
+		eval qq{
+			package ${class};
+			sub ${k} {
+				my \$self = shift;
+				return \$self->${name}->(\$self, \@_);
+			}
+		};
 	}
 	
 	return;
@@ -201,6 +330,8 @@ This feature requires L<Types::Standard>.
 
 =item 2.
 
+B<< Retired feature: >> this is now built in to Moo.
+
 Allows C<< default => $non_reference_value >> to work when defining
 attributes.
 
@@ -211,6 +342,16 @@ Allows C<< lazy_build => 1 >> to work when defining attributes.
 =item 4.
 
 Exports C<blessed> and C<confess> functions to your namespace.
+
+=item 5.
+
+Handles certain attribute traits. Currently C<Hash>, C<Array> and C<Code>
+are supported. This feature requires L<MooX::HandlesVia>. 
+
+C<String>, C<Number>, C<Counter> and C<Bool> are unlikely to ever be
+supported because of internal implementation details of Moo. If you need
+another attribute trait to be supported, let me know and I will consider
+it.
 
 =back
 
@@ -244,6 +385,11 @@ superset of Moose's type constraint syntax and built-in type constraints.
 Any unrecognized string that looks like it might be a class name is
 interpreted as a class type constraint.
 
+=head2 Subclassing
+
+MooX::late is designed to be reasonably easy to subclass. There are comments
+in the source code explaining hooks for extensibility.
+
 =head1 BUGS
 
 Please report any bugs to
@@ -252,6 +398,9 @@ L<http://rt.cpan.org/Dist/Display.html?Queue=MooX-late>.
 =head1 SEE ALSO
 
 C<MooX::late> uses L<Types::Standard> to check type constraints.
+
+C<MooX::late> uses L<MooX::HandlesVia> to provide native attribute traits
+support.
 
 The following modules bring additional Moose functionality to Moo:
 
@@ -266,9 +415,6 @@ L<MooX::Override> - support override/super
 L<MooX::Augment> - support augment/inner
 
 =back
-
-L<MooX::HandlesVia> provides a native-traits-like feature for Moo. There
-are plans afoot to add MooX::HandlesVia magic to MooX::late. 
 
 L<MooX> allows you to load Moo plus multiple MooX extension modules in a
 single line.

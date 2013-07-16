@@ -28,9 +28,11 @@ dist:project
 		nfo:programmingLanguage "Perl";
 	];
 	cpant:recommends  "MooX"^^cpant:dsWithoutVersion;
-	cpant:requires    "Moo 1.002000"^^cpant:dsWithVersion;
-	cpant:requires    "Type::Registry 0.014"^^cpant:dsWithVersion;
-	cpant:test_requires "Test::More 0.61"^^cpant:dsWithVersion;
+	cpant:recommends  "MooX::HandlesVia 0.001004"^^cpant:dsWithVersion;
+	cpant:requires    "Moo 1.003000"^^cpant:dsWithVersion;
+	cpant:requires    "Type::Utils 0.016"^^cpant:dsWithVersion;
+	cpant:test_requires "Test::More 0.96"^^cpant:dsWithVersion;
+	cpant:test_requires "Test::Requires 0.06"^^cpant:dsWithVersion;
 	cpant:version_from [
 		a nfo:FileDataObject;
 		a nfo:SourceCode;
@@ -59,6 +61,7 @@ dist:project
 	doap:release      dist:v_0-010;
 	doap:release      dist:v_0-011;
 	doap:release      dist:v_0-012;
+	doap:release      dist:v_0-013;
 	doap:repository   [
 		a doap:GitRepository;
 		doap:browse <https://github.com/tobyink/p5-moox-late>;
@@ -264,6 +267,28 @@ dist:v_0-012
 	dcs:released-by   cpan:tobyink;
 	doap:file-release <http://backpan.cpan.org/authors/id/T/TO/TOBYINK/MooX-late-0.012.tar.gz>;
 	doap:revision     "0.012"^^xsd:string.
+
+dist:v_0-013
+	a                 doap:Version;
+	dc:identifier     "MooX-late-0.013"^^xsd:string;
+	dc:issued         "2013-07-16"^^xsd:date;
+	dcs:changeset     [
+		dcs:item [
+			a dcs:Update;
+			rdfs:label "Use Type::Utils::dwim_type to translate strings to type constraint expressions.";
+		];
+		dcs:item [
+			a dcs:Addition;
+			rdfs:label "Support Moose attribute traits using MooX::HandlesVia.";
+		];
+		dcs:item [
+			a dcs:Removal;
+			rdfs:label "Retire support for non-reference attribute defaults because Moo now does this natively.";
+		];
+	];
+	dcs:released-by   cpan:tobyink;
+	doap:file-release <http://backpan.cpan.org/authors/id/T/TO/TOBYINK/MooX-late-0.013.tar.gz>;
+	doap:revision     "0.013"^^xsd:string.
 
 cpan:shlomif
 	a                 foaf:Person;
