@@ -4,7 +4,7 @@ use warnings;
 
 package MooX::late;
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.014';
+our $VERSION   = '0.015';
 
 use Moo              qw( );
 use Carp             qw( carp croak );
@@ -14,7 +14,7 @@ use Module::Runtime  qw( is_module_name );
 BEGIN {
 	package MooX::late::DefinitionContext;
 	our $AUTHORITY = 'cpan:TOBYINK';
-	our $VERSION   = '0.014';
+	our $VERSION   = '0.015';
 	
 	use Moo;
 	use overload (
@@ -61,7 +61,7 @@ BEGIN {
 # 
 sub _handlers
 {
-	qw( isa coerce lazy_build traits );
+	qw( isa does lazy_build traits );
 }
 
 # SUBCLASSING
@@ -157,7 +157,6 @@ sub _install_sugar
 	$installer->($caller, confess => \&Carp::confess);
 }
 
-my %registry;
 sub _handle_isa
 {
 	my $me = shift;
@@ -170,31 +169,15 @@ sub _handle_isa
 	return;
 }
 
-sub _handle_coerce
+sub _handle_does
 {
 	my $me = shift;
 	my ($name, $spec, $context, $class) = @_;
+	return unless defined $spec->{does};
 	
-	my $c = $spec->{coerce};
-	my $i = $spec->{isa};
+	require Types::Standard;
+	$spec->{isa} = Types::Standard::ConsumerOf()->of($spec->{does});
 	
-	if (defined($c) and !ref($c) and $c == 1)
-	{
-		if (blessed($i) and $i->isa('Type::Tiny') and $i->has_coercion)
-		{
-			$spec->{coerce} = $i->coercion;
-		}
-		elsif (blessed($i) and $i->can('has_coercion') and $i->has_coercion and $i->can('coerce'))
-		{
-			$spec->{coerce} = sub { $i->coerce(@_) };
-		}
-	}
-
-	if (defined($c) and !ref($c) and $c eq 0)
-	{
-		delete($spec->{coerce});
-	}
-
 	return;
 }
 
@@ -350,22 +333,15 @@ MooX::late does the following:
 
 =item 1.
 
-Allows C<< isa => $string >> to work when defining attributes for all
-Moose's built-in type constraints (and assumes other strings are package
-names).
-
-This feature requires L<Types::Standard>.
+Supports C<< isa => $stringytype >>.
 
 =item 2.
 
-B<< Retired feature: >> this is now built in to Moo.
-
-Allows C<< default => $non_reference_value >> to work when defining
-attributes.
+Supports C<< does => $rolename >> .
 
 =item 3.
 
-Allows C<< lazy_build => 1 >> to work when defining attributes.
+Supports C<< lazy_build => 1 >>.
 
 =item 4.
 
@@ -381,17 +357,16 @@ supported because of internal implementation details of Moo. If you need
 another attribute trait to be supported, let me know and I will consider
 it.
 
-=item 6.
-
-Supports C<< coerce => 1 >> if the type constraint is a blessed object
-implementing L<Type::API::Constraint::Coercible>.
-
 =back
 
 Five features. It is not the aim of C<MooX::late> to make every aspect of
 Moo behave exactly identically to Moose. It's just going after the low-hanging
 fruit. So it does five things right now, and I promise that future versions
 will never do more than seven.
+
+Previous releases of MooX::late added support for C<< coerce => 1 >> and
+C<< default => $nonref >>. These features have now been added to Moo itself,
+so MooX::late no longer has to deal with them.
 
 =head2 Use in Moo::Roles
 
@@ -458,7 +433,7 @@ Toby Inkster E<lt>tobyink@cpan.orgE<gt>.
 
 =head1 COPYRIGHT AND LICENCE
 
-This software is copyright (c) 2012-2013 by Toby Inkster.
+This software is copyright (c) 2012-2014 by Toby Inkster.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
